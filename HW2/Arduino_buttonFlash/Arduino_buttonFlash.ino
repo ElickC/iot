@@ -1,8 +1,10 @@
 // vars
 #define BUTTON 4
 #define LED 5
-bool buttonstate;
+bool buttonclick;
 bool clickedflag = false;
+bool on = false;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,29 +23,40 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   // read button state
-  buttonstate = digitalRead(BUTTON);
+  buttonclick = digitalRead(BUTTON);
 
   // if the button is clicked and it was not clicked previously
-  if (buttonstate and not clickedflag){
+  if (buttonclick and not clickedflag and not on){
 
       // turn the pin on 
       digitalWrite(LED, HIGH);
       
       // set the clicked flag
       clickedflag = true;
+
+      // set light on bool
+      on = true;
+
+      //sleep to wait for click to be done
+      delay(1000);
+  }
+
+  else if (buttonclick and not clickedflag and on){
+      // turn the pin off 
+      digitalWrite(LED, LOW);
+
+      // set light off bool
+      on = false;
+      
+      //sleep to wait for click to be done
+      delay(1000);
   }
 
   // if the button is not clicked now and it was clicked previously (a commplete click has now happened)
-  if (not buttonstate and clickedflag){
-
-    // turn the pin off 
-      digitalWrite(LED, LOW);
+  if (not buttonclick and clickedflag){ 
 
     // set the clicked flag
     clickedflag = false;
-
-    // print
-    Serial.println("clicked");
   }
   
 }
