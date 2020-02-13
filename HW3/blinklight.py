@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
 import time
 
-broker_address="192.168.1.161" #broker address (your pis ip address)
+broker_address="192.168.4.25" #broker address (your pis ip address)
 
 client = mqtt.Client() #create new mqtt client instance
 
@@ -62,6 +62,6 @@ while True:
 
     if (not buttonclick and clickedflag):
         clickedflag = False
-    
+
 
 client.loop_stop() #stop client

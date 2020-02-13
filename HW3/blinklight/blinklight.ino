@@ -2,9 +2,9 @@
 #include <PubSubClient.h>
 
 // WiFi/MQTT parameters
-#define WLAN_SSID       "Bilbo"
-#define WLAN_PASS       "beet93dour44pact"
-#define BROKER_IP       "192.168.1.161"
+#define WLAN_SSID       "Hifi"
+#define WLAN_PASS       "lanbeforetime"
+#define BROKER_IP       "192.168.4.54"
 
 //pins
 #define BUTTON 4
