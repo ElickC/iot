@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
 import time
 
-broker_address="192.168.1.54" #broker address (your pis ip address)
+broker_address="192.168.1.161" #broker address (your pis ip address)
 
 client = mqtt.Client() #create new mqtt client instance
 
@@ -43,51 +43,25 @@ GPIO.setup(18, GPIO.OUT)
 GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 clickedflag = False
-on = False
+lighton = False
 
 
 while True:
     buttonclick = GPIO.input(21)
 
-    if (buttonclick and not clickedflag and not on):
+    if (buttonclick and not clickedflag and not lighton):
         client.publish("/arled","on") #send message
         clickedflag = True
-        on = True
+        lighton = True
         time.sleep(1)
 
-    elif (buttonclick and not clickedflag and on):
+    elif (buttonclick and not clickedflag and lighton):
         client.publish("/arled","off") #send message
-        on = False
+        lighton = False
         time.sleep(1)
 
     if (not buttonclick and clickedflag):
         clickedflag = False
-
-
-
-
-
-
-#client.publish("/led","on") #send message
-
-#time.sleep(1)
-
-#client.publish("/led","off") #send message
-
-#time.sleep(1)
-
-#client.publish("/led","on") #send message
-
-#time.sleep(1)
-
-#client.publish("/led","off") #send message
-
-#time.sleep(1)
-
-#client.publish("/led","on") #send message
-
-#time.sleep(1)
-
-#client.publish("/led","off") #send message
+    
 
 client.loop_stop() #stop client

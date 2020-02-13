@@ -2,13 +2,17 @@
 #include <PubSubClient.h>
 
 // WiFi/MQTT parameters
-#define WLAN_SSID       "Nacho Wifi"
-#define WLAN_PASS       "thelanbeforetime"
-#define BROKER_IP       "192.168.1.54"
+#define WLAN_SSID       "Bilbo"
+#define WLAN_PASS       "beet93dour44pact"
+#define BROKER_IP       "192.168.1.161"
 
 //pins
 #define BUTTON 4
 #define LED 5 
+
+//vars
+bool clickedflag = false;
+bool lighton = false;
 
 WiFiClient client;
 PubSubClient mqttclient(client);
@@ -28,9 +32,6 @@ void callback (char* topic, byte* payload, unsigned int length) {
         digitalWrite(LED, LOW);
      }
   }
-
-  
-  
 }
 
 
@@ -65,19 +66,13 @@ void loop() {
   if (!mqttclient.connected()) {
     connect();
   }
-  mqttclient.loop();
-  //vars
-  bool buttonclick;
-  bool clickedflag = false;
-  bool on = false;
+  mqttclient.loop();  
 
   // read button state
-  buttonclick = digitalRead(BUTTON);
+  bool buttonclick = digitalRead(BUTTON);
 
   // if the button is clicked and it was not clicked previously
-  if (buttonclick and not clickedflag and not on){
-
-      Serial.println("Arduino button physically clickled - light should be on");
+  if (buttonclick and not clickedflag and not lighton){
 
       // turn the pin on 
       mqttclient.publish("/piled","on"); // send message
@@ -86,37 +81,30 @@ void loop() {
       clickedflag = true;
 
       // set light on bool
-      on = true;
+      lighton = true;
 
       //sleep to wait for click to be done
       delay(1000);
-      
-       Serial.println(clickedflag);
-       Serial.println(on);
-       Serial.println(buttonclick);
   }
 
-  if (buttonclick and not clickedflag and on){
+  if (buttonclick and not clickedflag and lighton){
+    
       // turn the pin off 
       mqttclient.publish("/piled","off"); // send message
 
-      Serial.println("Arduino button physically clickled - light should be off");
-
       // set light off bool
-      on = false;
+      lighton = false;
       
       //sleep to wait for click to be done
       delay(1000);
   }
   
-   // if the button is not clicked now and it was clicked previously (a commplete click has now happened)
-  if (not buttonclick and clickedflag){ 
+      // if the button is not clicked now and it was clicked previously (a commplete click has now happened)
+      if (not buttonclick and clickedflag){ 
 
-    // set the clicked flag
-    clickedflag = false;
-  }
-
-    
+      // set the clicked flag
+      clickedflag = false;
+      } 
 }
 
 
